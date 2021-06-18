@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  print-server:
+    build: 
+      context: .
+      dockerfile: ./.docker/easy-rch-printf-api.dockerfile
+    environment:
+      NATS_URL: nats://nats:4222
+      NATS_STREAM_NAME: TEST
+      NATS_SUBJECT: test
+      LISTEN_AT: 0.0.0.0:3000

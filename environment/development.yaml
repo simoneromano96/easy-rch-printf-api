@@ -1,0 +1,8 @@
+# NATS server URI
+NATS_URL: nats://127.0.0.1:4222
+# NATS stream name
+NATS_STREAM_NAME: TEST
+# NATS subject
+NATS_SUBJECT: test
+# The server will listen at the following address
+LISTEN_AT: 0.0.0.0:3000

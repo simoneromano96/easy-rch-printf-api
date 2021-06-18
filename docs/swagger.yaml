@@ -1,0 +1,38 @@
+basePath: /
+definitions:
+  main.PrintOrder:
+    properties:
+      command:
+        type: string
+    required:
+    - command
+    type: object
+info:
+  contact: {}
+  description: This is an auto-generated API Docs.
+  license:
+    name: MIT
+  title: API
+  version: "1.0"
+paths:
+  /new-order:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new print order.
+      parameters:
+      - description: New print order.
+        in: body
+        name: printOrder
+        required: true
+        schema:
+          $ref: '#/definitions/main.PrintOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.PrintOrder'
+      summary: Creates a new print order.
+swagger: "2.0"
