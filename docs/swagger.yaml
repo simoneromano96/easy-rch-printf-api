@@ -2,17 +2,32 @@ basePath: /
 definitions:
   main.PrintOrder:
     properties:
-      command:
-        type: string
+      products:
+        items:
+          $ref: '#/definitions/main.Product'
+        type: array
     required:
-    - command
+    - products
+    type: object
+  main.Product:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    required:
+    - name
+    - price
+    - quantity
     type: object
 info:
   contact: {}
-  description: This is an auto-generated API Docs.
+  description: Human and developer friendly API for the RCH Printer.
   license:
     name: MIT
-  title: API
+  title: Easy RCH PrintF! API
   version: "1.0"
 paths:
   /new-order:

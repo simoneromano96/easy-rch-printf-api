@@ -44,9 +44,22 @@ func loadConfig() (config Config, err error) {
 	return
 }
 
+// RCH Request to be sent
+type Service struct {
+	// The actual command
+	Commands []string `xml:"cmd"`
+}
+
+// A Product
+type Product struct {
+	Name     string  `json:"name" validate:"required"`
+	Price    float64 `json:"price" validate:"required,gt=0"`
+	Quantity int     `json:"quantity" validate:"required,gt=0"`
+}
+
 // PrintOrder struct to describe something that must be printed.
 type PrintOrder struct {
-	Command string `json:"command" validate:"required"`
+	Products []Product `json:"products" validate:"required"`
 }
 
 // PostPrintOrder func create new print order.
@@ -58,7 +71,6 @@ type PrintOrder struct {
 // @Success 200 {object} PrintOrder
 // @Router /new-order [post]
 func PostPrintOrder(c *fiber.Ctx) error {
-
 	// Create new Print Order struct
 	printOrder := &PrintOrder{}
 
@@ -70,12 +82,29 @@ func PostPrintOrder(c *fiber.Ctx) error {
 			"msg":   err.Error(),
 		})
 	}
+
+	var rchCommands []string
+
+	// Foreach product create a new command line
+	for i, product := range printOrder.Products {
+		newPrice := product.Price * 100
+		command := fmt.Sprintf("=R%d/$%.0f/*%d/(%s)", i, newPrice, product.Quantity, product.Name)
+		rchCommands = append(rchCommands, command)
+	}
+	// Add terminal command
+	rchCommands = append(rchCommands, "=T1")
+
+	fmt.Println(rchCommands)
+
+	// Create final request
+	rchRequest := Service{Commands: rchCommands}
+
 	// Initialize the encoder
 	var buffer bytes.Buffer
 	// Write to buffer
 	enc := gob.NewEncoder(&buffer)
 
-	err := enc.Encode(printOrder)
+	err := enc.Encode(rchRequest)
 	if err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -86,6 +115,8 @@ func PostPrintOrder(c *fiber.Ctx) error {
 
 	// Publish bytes
 	_, err = jetStreamContext.Publish(natsChannelName, buffer.Bytes())
+	// fmt.Println(buffer.Bytes())
+
 	if err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -98,9 +129,9 @@ func PostPrintOrder(c *fiber.Ctx) error {
 	return c.JSON(printOrder)
 }
 
-// @title API
+// @title Easy RCH PrintF! API
 // @version 1.0
-// @description This is an auto-generated API Docs.
+// @description Human and developer friendly API for the RCH Printer.
 // @license.name MIT
 // @BasePath /
 func main() {

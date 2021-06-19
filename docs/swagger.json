@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is an auto-generated API Docs.",
-        "title": "API",
+        "description": "Human and developer friendly API for the RCH Printer.",
+        "title": "Easy RCH PrintF! API",
         "contact": {},
         "license": {
             "name": "MIT"
@@ -47,11 +47,33 @@
         "main.PrintOrder": {
             "type": "object",
             "required": [
-                "command"
+                "products"
             ],
             "properties": {
-                "command": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/main.Product"
+                    }
+                }
+            }
+        },
+        "main.Product": {
+            "type": "object",
+            "required": [
+                "name",
+                "price",
+                "quantity"
+            ],
+            "properties": {
+                "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         }

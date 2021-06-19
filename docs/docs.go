@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/alecthomas/template"
 	"github.com/swaggo/swag"
+	"text/template"
 )
 
 var doc = `{
@@ -63,11 +63,33 @@ var doc = `{
         "main.PrintOrder": {
             "type": "object",
             "required": [
-                "command"
+                "products"
             ],
             "properties": {
-                "command": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/main.Product"
+                    }
+                }
+            }
+        },
+        "main.Product": {
+            "type": "object",
+            "required": [
+                "name",
+                "price",
+                "quantity"
+            ],
+            "properties": {
+                "name": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         }
@@ -89,8 +111,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "API",
-	Description: "This is an auto-generated API Docs.",
+	Title:       "Easy RCH PrintF! API",
+	Description: "Human and developer friendly API for the RCH Printer.",
 }
 
 type s struct{}
