@@ -3,7 +3,7 @@ FROM golang as build
 WORKDIR /easy-rch-printf-api
 COPY . .
 
-RUN go build ./src/*.go
+RUN go build ./*.go
 
 CMD ["/easy-rch-printf-api/main"]
 
