@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  print-server:
+  print-api:
     build: 
       context: .
       dockerfile: ./.docker/easy-rch-printf-api.dockerfile
